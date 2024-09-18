@@ -7,16 +7,16 @@ import json
 
 model_name = 'deepseek-chat'
 api_url = "https://api.deepseek.com/chat/completions"
-
 api_token = "sk-2604f83f3b364492aa891a7f717e265c"
+
 """
 deepseek_api = DeepseekAPI(api_url, api_token, model_name)
 response = deepseek_api.generate("告诉我北京2024年9月1日的天气")
 
 with open("example.json", "w", encoding="utf-8") as f:
     json.dump(response, f, ensure_ascii=False, indent=4)
-
 """
+
 env = Env([WebSearch()])
 
 llm = DeepseekAPI(

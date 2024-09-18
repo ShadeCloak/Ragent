@@ -13,17 +13,14 @@ class BaseProtocol:
         end_token = self.special_tokens['action_end_token']
 
         if start_token in text and end_token in text:
-            # 提取 action_str 的部分
             try:
                 parts = text.split(start_token, 1)
                 action_str = parts[1].split(end_token, 1)[0].strip()
-                #print("666")
                 #print(action_str)
 
-                # 处理 action_str
                 if isinstance(action_str, str):
                     action = json.loads(action_str)
-                    #print("666",action)
+                    #print(action)
                 else:
                     action = None
             except (IndexError, json.JSONDecodeError) as e:
@@ -31,7 +28,6 @@ class BaseProtocol:
         else:
             action = None
         
-        # 提取剩余的 text 部分
         text = text.split(start_token, 1)[0].strip()
         return text, action
 

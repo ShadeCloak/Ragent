@@ -1,5 +1,5 @@
 import requests
-from Ragent.action.base_action import tool_api  # 假设这个装饰器在该路径下
+from Ragent.action.base_action import tool_api
 import json
 
 class Env:
@@ -17,10 +17,8 @@ class Env:
         for tool_name, tool in self.tools.items():
             for method_name in dir(tool):
                 method = getattr(tool, method_name)
-                # 过滤掉私有方法和非可调用对象
                 if method_name.startswith('_') or not callable(method):
                     continue
-                # 记录类名.方法名作为工具名称
                 full_name = f"{tool_name}.{method_name}"
                 actions_info.append({
                     'name': full_name,
@@ -46,11 +44,9 @@ class Env:
             return f"Action {action_name}没有方法{method_name}"
 
         try:
-            #print("666")
             #print(parameters)
             #print(method)
             result = method(**parameters)
-            #print("777")
         except Exception as e:
             return f"{name},错误：{str(e)}"
         return result
@@ -58,11 +54,6 @@ class Env:
 class WebSearch:
     def __init__(self, api_url = '', api_key = ''):
         """
-        初始化 WebSearch 类，设置 API 的基础 URL 和 API 密钥，用于与搜索引擎进行交互。
-        
-        参数:
-        - api_url (str): 可选参数，设置搜索引擎 API 的 URL，默认为 Google 搜索 API 地址。
-        - api_key (str): 可选参数，API 访问所需的密钥，默认为示例密钥。
         """
         self.name = 'Websearch'
         self.api_url = api_url = 'https://google.serper.dev/search'

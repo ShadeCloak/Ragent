@@ -24,7 +24,7 @@ class ReAct:
         self.add_to_state(role = "user", content = f"问题如下：{inputs}可以使用的工具描述如下：{actions_info}工具使用示例如下：{prompt_to_tool}")
 
         for turn in range(self.max_turn):
-            print(f"正在进行第 {turn + 1} 轮对话...")  # 打印当前轮次
+            print(f"正在进行第 {turn + 1} 轮对话...")
 
             filename = f"{turn}_state.json"
             with open(filename, "w", encoding="utf-8") as f:
@@ -39,7 +39,7 @@ class ReAct:
             #print(f"response:{response}")
             message, action = self.protocol.parse(response)
             #print(f"message:{message}")
-           # print(f"action:{action}")
+            # print(f"action:{action}")
             if action is None:
                 return message
 
