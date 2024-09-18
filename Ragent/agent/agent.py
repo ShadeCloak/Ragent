@@ -38,7 +38,6 @@ class ReAct:
             #print(f"llm_response:{llm_response}")
             response = llm_response['choices'][0]['message']['content']
             self.add_to_state(role = "assistant", content = response)
-            print("111")
             #print(f"response:{response}")
             message, action = self.protocol.parse(response)
             #print(f"message:{message}")
