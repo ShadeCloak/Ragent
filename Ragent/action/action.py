@@ -26,6 +26,23 @@ class Env:
                 })
         return actions_info
 
+    def get_tool_description(self, full_name):
+        """
+        """
+        tool_description = []
+        if '.' not in full_name:
+            return
+
+        else:
+            tool_name, method_name = full_name.split('.')
+            tool = self.tools.get(tool_name)
+            method = getattr(tool, method_name)
+            tool_description.append({
+                'name': full_name,
+                'description': method.__doc__
+            })
+            return tool_description
+
     def __call__(self, name, parameters):
         """
         """

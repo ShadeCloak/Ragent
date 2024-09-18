@@ -1,4 +1,4 @@
-from Ragent.prompt.prompt import prompt_to_tool
+from Ragent.prompt.prompt import prompt_to_tool_instructions
 import json
 
 class ReAct:
@@ -21,7 +21,10 @@ class ReAct:
         """
         actions_info = self.env.get_actions_info()
         print(f"actions_info:{actions_info}")
-        self.add_to_state(role = "user", content = f"问题如下：{inputs}可以使用的工具描述如下：{actions_info}工具使用示例如下：{prompt_to_tool}")
+        self.add_to_state(
+            role = "user", 
+            content = f"问题如下：{inputs}可以使用的工具描述如下：{actions_info}工具使用示例如下：{prompt_to_tool_instructions}"
+        )
 
         for turn in range(self.max_turn):
             print(f"正在进行第 {turn + 1} 轮对话...")
@@ -43,6 +46,9 @@ class ReAct:
             if action is None:
                 return message
 
+            used_tool_info = self.env.get_tool_description(action['name'])
+
+
             try:
                 env_response = self.env(action['name'], action['parameters'])
             except Exception as e:
@@ -52,7 +58,7 @@ class ReAct:
             with open("env_response.json", "w", encoding="utf-8") as f:
                 json.dump(env_response, f, ensure_ascii=False, indent=4)
 
-            self.add_to_state(role = 'user', content=f"在上一轮工具调用之后，得到如下结果：{env_response}")
+            self.add_to_state(role = 'user', content=f"在上一轮工具选择调用的工具及其工具描述如下：{used_tool_info}.调用之后，得到如下结果：{env_response}")
 
             
 

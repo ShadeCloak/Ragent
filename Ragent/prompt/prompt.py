@@ -1,4 +1,4 @@
-prompt_to_tool = """
+prompt_to_tool_instructions = """
 请根据以下要求回答问题，并在需要调用工具时，使用特定格式来标记工具调用。
 
 要求：

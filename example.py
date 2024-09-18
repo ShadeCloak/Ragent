@@ -33,7 +33,7 @@ agent = ReAct(
     protocol=protocol
 )
 
-response = agent.run("请上网查询有关红楼梦的资料，并挑选几篇仔细阅读，最后总结出红楼梦评价")
+response = agent.run("请上网查询有关《红楼梦》的资料，并挑选几篇仔细阅读，最后总结出红楼梦评价")
 
 print(response)
 
