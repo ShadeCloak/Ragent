@@ -38,7 +38,7 @@ class ReAct:
             #print(f"llm_response:{llm_response}")
             response = llm_response['choices'][0]['message']['content']
             self.add_to_state(role = "assistant", content = response)
-            
+            print("111")
             #print(f"response:{response}")
             message, action = self.protocol.parse(response)
             #print(f"message:{message}")
@@ -47,7 +47,6 @@ class ReAct:
                 return message
 
             used_tool_info = self.env.get_tool_description(action['name'])
-
 
             try:
                 env_response = self.env(action['name'], action['parameters'])
@@ -58,7 +57,10 @@ class ReAct:
             with open("env_response.json", "w", encoding="utf-8") as f:
                 json.dump(env_response, f, ensure_ascii=False, indent=4)
 
-            self.add_to_state(role = 'user', content=f"在上一轮工具选择调用的工具及其工具描述如下：{used_tool_info}.调用之后，得到如下结果：{env_response}")
+            used_tool = f"在上一轮工具选择调用的工具及其工具描述如下：{used_tool_info}"
+
+            prompt = prompt_to_tool_instructions.format(used_tool_info=used_tool)
+            self.add_to_state(role = 'user', content=f"{prompt}.调用之后，得到如下结果：{env_response}")
 
             
 
