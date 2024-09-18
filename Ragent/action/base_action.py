@@ -33,4 +33,5 @@ def tool_api(func):
 
     # 为方法添加标记
     wrapper.is_tool_api = True  # 标记这个方法为 tool API
+    wrapper.__doc__ = func.__doc__
     return wrapper

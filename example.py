@@ -33,7 +33,7 @@ agent = ReAct(
     protocol=protocol
 )
 
-response = agent.run("请上网查询阿里巴巴在 2023 年的电商业务交易额是多少？同时对比一下京东在同年的电商业务交易额？")
+response = agent.run("请上网查询有关红楼梦的资料，并挑选几篇仔细阅读，最后总结出红楼梦评价")
 
 print(response)
 

@@ -19,7 +19,9 @@ class ReAct:
     def run(self, inputs = None):
         """
         """
-        self.add_to_state(role = "user", content = f"{inputs},{prompt_to_tool}")
+        actions_info = self.env.get_actions_info()
+        print(f"actions_info:{actions_info}")
+        self.add_to_state(role = "user", content = f"问题如下：{inputs}可以使用的工具描述如下：{actions_info}工具使用示例如下：{prompt_to_tool}")
 
         for turn in range(self.max_turn):
             print(f"正在进行第 {turn + 1} 轮对话...")  # 打印当前轮次
@@ -50,17 +52,7 @@ class ReAct:
             with open("env_response.json", "w", encoding="utf-8") as f:
                 json.dump(env_response, f, ensure_ascii=False, indent=4)
 
-            def convert_to_paragraph(data):
-                paragraph = []
-                for key, value in data.items():
-                    snippet = value.get("snippet", "")
-                    if snippet:
-                        paragraph.append(snippet)
-                return " ".join(paragraph)
-
-            # 使用该函数
-            paragraph = convert_to_paragraph(env_response)
-            self.add_to_state(role = 'user', content=paragraph)
+            self.add_to_state(role = 'user', content=f"在上一轮工具调用之后，得到如下结果：{env_response}")
 
             
 

@@ -15,10 +15,17 @@ class Env:
         """
         actions_info = []
         for tool_name, tool in self.tools.items():
-            actions_info.append({
-                'name' : tool_name,
-                'description' : tool.__doc__
-            })
+            for method_name in dir(tool):
+                method = getattr(tool, method_name)
+                # 过滤掉私有方法和非可调用对象
+                if method_name.startswith('_') or not callable(method):
+                    continue
+                # 记录类名.方法名作为工具名称
+                full_name = f"{tool_name}.{method_name}"
+                actions_info.append({
+                    'name': full_name,
+                    'description': method.__doc__
+                })
         return actions_info
 
     def __call__(self, name, parameters):
@@ -51,6 +58,11 @@ class Env:
 class WebSearch:
     def __init__(self, api_url = '', api_key = ''):
         """
+        初始化 WebSearch 类，设置 API 的基础 URL 和 API 密钥，用于与搜索引擎进行交互。
+        
+        参数:
+        - api_url (str): 可选参数，设置搜索引擎 API 的 URL，默认为 Google 搜索 API 地址。
+        - api_key (str): 可选参数，API 访问所需的密钥，默认为示例密钥。
         """
         self.name = 'Websearch'
         self.api_url = api_url = 'https://google.serper.dev/search'
@@ -60,6 +72,13 @@ class WebSearch:
     @tool_api
     def search(self, query):
         """
+        执行网络搜索请求，使用给定的查询关键字发送 POST 请求到 API，并返回搜索结果。
+        
+        参数:
+        - query (str): 要进行搜索的查询关键字或问题。
+        
+        返回:
+        - search_results (dict): 搜索结果的字典形式，包含链接、标题和摘要信息。
         """
         #print(f"query:{query}")
         payload = json.dumps({
@@ -108,9 +127,44 @@ class WebSearch:
     @tool_api
     def select(self, select_ids):
         """
+        从搜索结果中选择指定的结果条目。
+        
+        参数:
+        - select_ids (list): 包含要选择的结果的索引列表。
+        
+        返回:
+        - selectde_results (dict): 按选择的索引返回的搜索结果字典。
         """
         selectde_results = {}
         for idx in select_ids:
-            selectde_results[idx] = self.search_results[idx]
+            result = self.search_results.get(idx)
+            if not result:
+                continue
+            url = result['url']
+            title = result['title']
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+
+                from bs4 import BeautifulSoup
+                soup = BeautifulSoup(response.text, 'html.parser')
+                paragraphs = soup.find_all('p')
+                content = ' '.join([p.get_text() for p in paragraphs if p.get_text()])
+
+                selectde_results[idx] = {
+                    'url': url,
+                    'title': title,
+                    'content': content[:1000]
+                }
+            except Exception as e:
+                selectde_results[idx] = {
+                    'url': url,
+                    'title': title,
+                    'error': f"Failed to fetch content: {str(e)}"
+                }
+
+        with open("select.json", "w", encoding="utf-8") as f:
+            json.dump(selectde_results, f, ensure_ascii=False, indent=4)
+
         return selectde_results
 

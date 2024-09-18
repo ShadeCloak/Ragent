@@ -14,29 +14,25 @@ prompt_to_tool = """
 
 
 示例 1：
-- 问题: “亚马逊在2023年的全球销售额是多少？”
-- 回答: “亚马逊的全球销售额信息通常在其年度财报中公布。如果您需要具体的数据，请调用以下工具：
   <|FunctionCallBegin|>
   {
     "name": "Websearch.search",
     "parameters": {
-      "query": "2023 Amazon global sales revenue"
+      "query": "the most beautiful city"
     }
   }
-  <|FunctionCallEnd|>”
+  <|FunctionCallEnd|>
 
 示例 2：
-- 问题: “苹果公司2023年第四季度的收入是多少？”
-- 回答: “苹果公司的季度收入信息通常会在其季度财报中公布。如果您想查询最新的第四季度收入，请调用以下工具：
   <|FunctionCallBegin|>
   {
-    "name": "Websearch.search",
+    "name": "Websearch.select",
     "parameters": {
-      "query": "2023 Apple Q4 revenue"
+      "select_ids": [1, 3]
     }
   }
-  <|FunctionCallEnd|>”
+  <|FunctionCallEnd|>
 
-请注意：确保回答中包含清晰的标记，并且在需要时准确地指定工具和参数。
+请注意：确保回答中包含清晰的标记，并且在需要时准确地指定工具和参数。一定记住每次只能选择一个工具调用
 
 """
